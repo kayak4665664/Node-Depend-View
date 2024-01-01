@@ -71,7 +71,7 @@ jobs:
           echo "No changes detected"
         fi
 
-  publish to npm:
+  publish_to_npm:
     needs: build
     runs-on: ubuntu-latest
 
@@ -91,7 +91,7 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish to github packages:
+  publish_to_github_packages:
     needs: build
     runs-on: ubuntu-latest
 
