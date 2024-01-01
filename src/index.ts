@@ -32,7 +32,7 @@ async function main(dir: string, depth: number, jsonPath: string | undefined): P
     app.use(cors());
 
     // Serve static files from the 'public' directory.
-    app.use(express.static('public'));
+    app.use(express.static(path.join(__dirname, '../public')));
 
     // Define a route to get the analysis data.
     app.get('/analyze', async (req, res): Promise<void> => {

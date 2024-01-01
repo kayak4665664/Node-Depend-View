@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight Node.js tool for efficient analysis and visualization of npm package dependencies.",
   "main": "lib/index.js",
   "scripts": {
