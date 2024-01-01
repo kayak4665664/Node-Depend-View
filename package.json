@@ -1,5 +1,8 @@
 {
   "name": "@kayak4665664/node-depend-view",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "A lightweight Node.js tool for efficient analysis and visualization of npm package dependencies.",
   "main": "lib/index.js",
