@@ -3,8 +3,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.1",
-  "description": "A lightweight Node.js tool for efficient analysis and visualization of npm package dependencies.",
+  "version": "1.1.0",
+  "description": "A lightweight Node.js tool for efficient analysis and visualization of npm, pnpm, and yarn package dependencies.",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -14,17 +14,11 @@
     "build": "tsc"
   },
   "keywords": [
-    "npm-dependencies",
     "dependency-analysis",
-    "nodejs-tool",
-    "package-dependency",
     "dependency-graph",
     "dependency-management",
-    "npm-package-analysis",
-    "project-stability",
-    "performance-optimization",
-    "security-audit",
-    "dependency-visualization"
+    "performanc e-optimization",
+    "package-json"
   ],
   "author": {
     "name": "kayak4665664",
