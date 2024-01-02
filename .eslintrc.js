@@ -7,7 +7,7 @@ module.exports = {
     'airbnb-base',
     'plugin:jest/recommended',
   ],
-  ignorePatterns: ['.eslintrc.cjs', 'dist', 'public'],
+  ignorePatterns: ['.eslintrc.cjs', 'dist', 'public', 'lib'],
   overrides: [{
     env: { node: true },
     files: ['.eslintrc.{js,cjs}'],

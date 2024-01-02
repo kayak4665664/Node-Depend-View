@@ -2,9 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs/promises';
 import path from 'path';
-import { analyze, exists } from './analyze';
+import { analyze, exists, getRealPath } from './analyze';
 
-async function main(dir: string, depth: number, jsonPath: string | undefined): Promise<void> {
+async function main(
+  dir: string,
+  depth: number,
+  jsonPath: string | undefined,
+  devDependencies: boolean,
+): Promise<void> {
   const packageJsonPath: string = path.join(dir, 'package.json');
   const nodeModules: string = path.join(dir, 'node_modules');
 
@@ -15,11 +20,14 @@ async function main(dir: string, depth: number, jsonPath: string | undefined): P
     return;
   }
 
+  const realDir: string = await getRealPath(dir);
+
   console.time('Time');
   const jsonData = await analyze(
-    dir,
+    realDir,
     Math.max(1, Math.min(depth, 64)),
     // Ensure the depth is between 1 and 64.
+    devDependencies,
   );
   console.timeEnd('Time');
 

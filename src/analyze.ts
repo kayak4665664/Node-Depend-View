@@ -10,6 +10,14 @@ async function exists(filePath: string): Promise<boolean> {
   } catch { return false; }
 }
 
+// Function to get real path if the given path is a symbolic link.
+async function getRealPath(filePath: string): Promise<string> {
+  try {
+    const realPath: string = await fs.realpath(filePath);
+    return realPath;
+  } catch { return filePath; }
+}
+
 interface Node {
   id: string;
   name: string;
@@ -33,6 +41,7 @@ interface PackageJson {
   version: string;
   description: string;
   dependencies?: { [key: string]: string };
+  devDependencies?: { [key: string]: string };
 }
 
 // Declare global variables for tracking visited directories, nodes, etc.
@@ -43,6 +52,8 @@ const adjacencyList: Map<string, { outNodes: Set<string>, inNodes: Set<string> }
 const dirsQueue: { currentDir: string, currentDepth: number }[] = [];
 const multipleVersions: Map<string, Set<string>> = new Map();
 const nodesDegrees: Map<string, { inDegree: number, outDegree: number }> = new Map();
+let rootDir: string = '';
+let includeDevDependencies: boolean = false;
 
 // Function to get the node ID based on directory.
 async function getNodeId(dir: string): Promise<string | null> {
@@ -73,6 +84,14 @@ async function getNodeId(dir: string): Promise<string | null> {
   const dependencies: {
     [key: string]: string;
   } = packageJson.dependencies || {};
+
+  if (includeDevDependencies) {
+    const devDependencies: {
+      [key: string]: string;
+    } = packageJson.devDependencies || {};
+    Object.assign(dependencies, devDependencies);
+  }
+
   visitedDirs.set(dir, { node, dependencies });
 
   return nodeId;
@@ -136,11 +155,13 @@ async function findTargets(
       Promise<void> => {
       if (!added) {
         const [targetName, targetVersion] = target;
-        const targetDir: string = path.join(currentDir, targetName);
-        const targetId: string | null = await getTargetId(targetName, targetVersion, targetDir);
 
+        const targetDir: string = path.join(currentDir, targetName);
+        const realTargetDir: string = await getRealPath(targetDir);
+
+        const targetId: string | null = await getTargetId(targetName, targetVersion, realTargetDir);
         if (targetId) {
-          await addEdge(sourceId, targetId, depth, targetDir);
+          await addEdge(sourceId, targetId, depth, realTargetDir);
           targets.set(target, true);
         }
       }
@@ -152,7 +173,6 @@ async function findTargets(
 async function parseDependencies(
   sourceId: string,
   dependencies: { [key: string]: string },
-  rootDir: string,
   parentDir: string,
   depth: number,
 ): Promise<void> {
@@ -181,7 +201,7 @@ async function parseDependencies(
 }
 
 // Function to parse the package.json file and create nodes and edges.
-async function parsePackageJson(dir: string, rootDir: string, depth: number): Promise<void> {
+async function parsePackageJson(dir: string, depth: number): Promise<void> {
   if (depth < 1) return;
 
   const nodeId: string | null = await getNodeId(dir);
@@ -192,19 +212,19 @@ async function parsePackageJson(dir: string, rootDir: string, depth: number): Pr
   if (depth - 1 < 1 || parsedNodes.has(nodeId)) return;
 
   const { dependencies } = (visitedDirs.get(dir)!);
-  if (dependencies) await parseDependencies(nodeId, dependencies, rootDir, dir, depth - 1);
+  if (dependencies) await parseDependencies(nodeId, dependencies, dir, depth - 1);
 
   parsedNodes.add(nodeId);
 }
 
 // Function to perform a breadth-first search starting from the root directory.
-async function breadthFirstSearch(rootDir: string): Promise<void> {
+async function breadthFirstSearch(): Promise<void> {
   if (dirsQueue.length === 0) return;
 
   const { currentDir, currentDepth } = dirsQueue.shift()!;
-  await parsePackageJson(currentDir, rootDir, currentDepth);
+  await parsePackageJson(currentDir, currentDepth);
 
-  await breadthFirstSearch(rootDir);
+  await breadthFirstSearch();
 }
 
 // Function to perform a topological sort on the nodes and edges.
@@ -258,10 +278,13 @@ async function topologicalSort(
 }
 
 // Main function to analyze the directory and return nodes and edges.
-async function analyze(dir: string, depth: number = 5):
+async function analyze(dir: string, depth: number = 3, devDependencies: boolean = false):
   Promise<{ nodesList: Node[], edgesList: Edge[] }> {
+  includeDevDependencies = devDependencies;
+
   dirsQueue.push({ currentDir: dir, currentDepth: depth });
-  await breadthFirstSearch(dir);
+  rootDir = dir;
+  await breadthFirstSearch();
 
   multipleVersions.forEach((versions: Set<string>): void => {
     if (versions.size < 2) return;
@@ -317,4 +340,4 @@ async function analyze(dir: string, depth: number = 5):
   return { nodesList, edgesList };
 }
 
-export { analyze, exists };
+export { analyze, exists, getRealPath };

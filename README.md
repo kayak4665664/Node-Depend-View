@@ -1,26 +1,26 @@
 # Node-Depend-View
 
-## Description
+## 📝 Description
 
 Node-Depend-View is a lightweight Node.js tool for efficient analysis and visualization of npm package dependencies.
 
-### key Features:
+### 🌟 Key Features:
 
-- **Dependency Visualization**: Leverage D3.js force-directed graphs to intuitively display package dependencies in a web browser.
-- **Multiple Version Detection**: Easily spot packages with multiple versions in your project, highlighted with red dots for quick identification.
-- **Cycle Detection**: Detect and highlight circular dependencies with red edges, simplifying the process of resolving potential issues.
-- **Theme Support**: Automatically adapts to light and dark themes, providing a seamless user experience.
+- **🎨 Dependency Visualization**: Leverage D3.js force-directed graphs to intuitively display package dependencies in a web browser.
+- **🔍 Multiple Version Detection**: Easily spot packages with multiple versions in your project, highlighted with red dots for quick identification.
+- **🔄 Cycle Detection**: Detect and highlight circular dependencies with red edges, simplifying the process of resolving potential issues.
+- **🌗 Theme Support**: Automatically adapts to light and dark themes, providing a seamless user experience.
 
-> [Frontend-of-Node-Depend-View](https://github.com/kayak4665664/Frontend-of-Node-Depend-View) is the front end repository of Node-Depend-View.
+> [🔗 Frontend-of-Node-Depend-View](https://github.com/kayak4665664/Frontend-of-Node-Depend-View) is the front end repository of Node-Depend-View.
 
-## Screenshots
+## 📸 Screenshots
 
 ![Dependency Visualization](https://github.com/kayak4665664/Node-Depend-View/blob/main/images/1.png)
 
 ![Example of Circular Dependencies](https://github.com/kayak4665664/Node-Depend-View/blob/main/images/2.png)
 
 
-## Installation
+## 📦 Installation
 
 To install Node-Depend-View, run the following command in your terminal:
 
@@ -28,14 +28,14 @@ To install Node-Depend-View, run the following command in your terminal:
 npm install -g @kayak4665664/node-depend-view
 ```
 
-## Usage
+## 🚀 Usage
 Get started with Node-Depend-View using the command-line interface:
 
 ```
 node-depend-view --help
 ```
 
-## Command Options
+## ⚙️ Command Options
 ```
 Usage: -d <dir> -p <depth> -j <jsonPath>
 
@@ -47,7 +47,7 @@ Options:
   -j, --jsonPath  Path to save JSON output                              [string]
 ```
 
-## Examples
+## 🌈 Examples
 
 1. To visualize dependencies:
 
